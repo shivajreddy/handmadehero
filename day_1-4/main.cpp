@@ -1,6 +1,7 @@
 #include <Windows.h>
 
 #include <iostream>
+#include <string>
 
 void foo(void) {
   const char *text = "This is the first thing we have actually printed\n";
@@ -13,9 +14,8 @@ void foo(void) {
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                     PWSTR pCmdLine, int nCmdShow) {
-  /* hi
+  /*
   int INTEGER;
-0x0000007FE0EFF8EC 254 127 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 翾.........
   INTEGER = 10;
 
   char SmallS;           // 8 bits: 256 unique values [-128, 127]
@@ -28,6 +28,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   int unsigned LargeU;  // 32 bits: ~4 billion values
   */
 
+  /*
   char unsigned Test;
   char unsigned *TestPointer;
 
@@ -35,8 +36,24 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   Test = 255;
   Test += 1;
-  // 0x000000eb6a34fbf4
+
+  foo();
+  */
+
+  unsigned int Test;
+  Test = 88;
+
+  int INTEGER;
+  INTEGER = 21;
+
+  unsigned long LONG;  // 0x000000c28011ec3c
+  LONG = 69420;
+  // 00007FFA25863106
+
+  std::string TEXT = "HELLO THERE MAN";
+
+  OutputDebugStringA("size of long: ");
+  OutputDebugStringA(std::to_string(sizeof(unsigned long)).c_str());
 
   foo();
 }
-// 0x0000007fe0eff694

@@ -1,19 +1,19 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\shiva\\dev\\handmadehero\\",
+  "WorkspaceRootPath": "C:\\Users\\sreddy\\dev\\handmadehero\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{DB799A0B-C3E5-4732-803B-7D0097AB6B4C}|handmadehero.vcxproj|C:\\Users\\shiva\\dev\\handmadehero\\day_1-4\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{DB799A0B-C3E5-4732-803B-7D0097AB6B4C}|handmadehero.vcxproj|C:\\Users\\sreddy\\dev\\handmadehero\\day_1-4\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{DB799A0B-C3E5-4732-803B-7D0097AB6B4C}|handmadehero.vcxproj|solutionrelative:day_1-4\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
     {
-      "Orientation": 1,
+      "Orientation": 0,
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 200,
+          "DockedWidth": 200,
           "SelectedChildIndex": 1,
           "Children": [
             {
@@ -24,28 +24,14 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\shiva\\dev\\handmadehero\\day_1-4\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\sreddy\\dev\\handmadehero\\day_1-4\\main.cpp",
               "RelativeDocumentMoniker": "day_1-4\\main.cpp",
-              "ToolTip": "C:\\Users\\shiva\\dev\\handmadehero\\day_1-4\\main.cpp",
+              "ToolTip": "C:\\Users\\sreddy\\dev\\handmadehero\\day_1-4\\main.cpp",
               "RelativeToolTip": "day_1-4\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAAAA4AAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-01-27T12:35:28.037Z",
+              "WhenOpened": "2025-01-27T12:43:52.721Z",
               "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedHeight": 1276,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
