@@ -1,3 +1,10 @@
+# Cpp
+
+# CMakeFiles
+**/CMakeFiles/
+**/build/
+**/out
+
 # Visual Studio
 **/.vs/
 **/x64/
