@@ -13,7 +13,7 @@ void foo(void) {
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                     PWSTR pCmdLine, int nCmdShow) {
-  /*
+  /* hi
   int INTEGER;
 0x0000007FE0EFF8EC 254 127 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 翾.........
   INTEGER = 10;
