@@ -4,9 +4,9 @@ REM call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\B
 mkdir ..\build
 pushd ..\build
 
-pushd ..\code
-
 pwd
+cl -Zi ..\code\win32_handmade.cpp
+popd
 
-cl ..\code\win32_handmade.cpp
+pushd ..\code
 
