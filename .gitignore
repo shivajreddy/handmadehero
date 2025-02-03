@@ -1,3 +1,7 @@
+# Build files
+build/
+**/build/
+
 # Cpp
 
 # CMakeFiles
@@ -10,3 +14,79 @@
 **/x64/
 **/x86/
 
+# Ignore Visual Studio 2022 specific files
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.VC.VC.db-shm
+*.VC.VC.db-wal
+
+# Ignore build output directories
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore compiled files
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.lib
+*.exp
+*.obj
+*.map
+*.idb
+*.ipch
+*.pgc
+*.pgd
+
+# Ignore temporary files
+*.tmp
+*.log
+*.tlog
+*.lastbuildstate
+*.cache
+
+# Ignore other unnecessary files
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.opensdf
+*.sdf
+*.ipch
+*.db
+
+# Ignore generated files
+*.generated.cpp
+*.generated.h
+
+# Ignore shader intermediate files
+*.cso
+*.hlsl
+
+# Ignore asset build files (if applicable)
+assets/build/
+assets/temp/
+
+# Ignore macOS files (if working cross-platform)
+.DS_Store
+
+# Ignore CMake build files (if applicable)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Ignore other IDE files (if applicable)
+.idea/
+.vscode/

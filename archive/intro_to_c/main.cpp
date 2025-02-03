@@ -12,6 +12,7 @@ void foo(void) {
   printf("HELLO THERE");
 }
 
+<<<<<<< HEAD:day_1-4/main.cpp
 struct Projectile {
   char unsigned IsThisOnFire;  // 1 if it's on fire, 0 if it's not
   int Damage;                  // this is how much damage it does on impact
@@ -21,6 +22,10 @@ struct Projectile {
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                     PWSTR pCmdLine, int nCmdShow) {
+=======
+int WINAPI wWinMain_day4(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                         PWSTR pCmdLine, int nCmdShow) {
+>>>>>>> refs/remotes/origin/main:archive/intro_to_c/main.cpp
   /*
   int INTEGER;
   INTEGER = 10;
@@ -80,7 +85,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   short* test_pointer = (short*)&TestProjectile;
   *test_pointer = 300;
 
-  foo();
+  // 1 1111 0100
+  // 0000 0001 1111 0100
+
+  return 0;
 }
 
 // 69420
