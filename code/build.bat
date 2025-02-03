@@ -1,7 +1,7 @@
 @echo off
 
 :: Set up the Visual Studio environment (this takes like 1-2 seconds :/)
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+REM call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 :: Create and go to build directory
 mkdir ..\build
