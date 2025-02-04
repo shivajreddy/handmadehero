@@ -38,7 +38,15 @@ LRESULT CALLBACK MainWindowCallbackProcedure(HWND Window, UINT Message,
       int Y = Paint.rcPaint.top;
       LONG Width = Paint.rcPaint.right - Paint.rcPaint.left;
       LONG Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
-      PatBlt(DeviceContext, X, Y, Width, Height, WHITENESS);
+
+      // PatBlt(DeviceContext, X, Y, Width, Height, WHITENESS);
+
+      HBRUSH hPurpleBrush = CreateSolidBrush(0x00800080L);  // L for DWORD
+      HGDIOBJ holdBrush = SelectObject(DeviceContext, hPurpleBrush);
+      PatBlt(DeviceContext, X, Y, Width, Height, PATCOPY);
+      SelectObject(DeviceContext, holdBrush);  // restore old brush
+      DeleteObject(hPurpleBrush);              // clean up purple brush
+
       EndPaint(Window, &Paint);
     } break;
     default:
