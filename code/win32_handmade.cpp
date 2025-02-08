@@ -12,10 +12,6 @@ $Creator: smpl
 #include <wingdi.h>
 #include <winuser.h>
 
-#include <cstring>
-
-#define MAX_LOADSTRING 100
-
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES
 //-------------------------------------------------------------------
@@ -29,17 +25,16 @@ char win_class[100];
 // FORWARD DECLARATIONS
 //-------------------------------------------------------------------
 ATOM RegisterHandmadeHeroWindowClass(HINSTANCE);
-BOOL InitializeWindowInstance(HINSTANCE, int);
 LRESULT CALLBACK MainWindowCallbackProcedure(HWND, UINT, WPARAM, LPARAM);
+BOOL InitializeWindowInstance(HINSTANCE, int);
 
 //-------------------------------------------------------------------
 // APP ENTRY POINT
 //-------------------------------------------------------------------
 int APIENTRY wWinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PrevInstance,
                       _In_ LPWSTR CommandLine, _In_ int ShowCommand) {
-  // Initialize Global Strings
-  // LoadString(Instance, 103, szTitle, MAX_LOADSTRING);
-  // LoadString(Instance, 109, szWindowClass, MAX_LOADSTRING);
+  // 0. Initialize Global Variables
+  // must use same class & same title, for registering & creating new windows
   strcpy_s(win_title, "HandMadeHero");
   strcpy_s(win_class, "HandMadeHero");
 
@@ -51,7 +46,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PrevInstance,
     return FALSE;
   }
 
-  // Main message loop:
+  // 3. Main message loop:
   MSG Message;
   HACCEL hAccelTable = LoadAccelerators(Instance, MAKEINTRESOURCE(109));
   OutputDebugStringA("hello once\n");
@@ -67,6 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PrevInstance,
 }
 
 //----------------------------------------------------------------------
+//   2.1:
 //   FUNCTION: InitInstance(HINSTANCE, int)
 //   PURPOSE: Saves instance handle and creates main window
 //   COMMENTS:
@@ -104,12 +100,14 @@ BOOL InitializeWindowInstance(HINSTANCE Instance, int ShowCommand) {
     return FALSE;
   }
 
-  ShowWindow(WindowHandle, ShowCommand);
-  UpdateWindow(WindowHandle);
+  ////  added new, but we using WS_VISIBLE so it should be fine
+  // ShowWindow(WindowHandle, ShowCommand);
+  //  UpdateWindow(WindowHandle);
 
   return TRUE;
 }
 
+// 1.1
 ATOM RegisterHandmadeHeroWindowClass(HINSTANCE hInst) {
   // Window class for the main window
   // WNDCLASSEXW WindowClass = {0};  // for WNDCLASSEXW
@@ -125,6 +123,7 @@ ATOM RegisterHandmadeHeroWindowClass(HINSTANCE hInst) {
   return RegisterClass(&WindowClass);
 }
 
+// 1.2
 LRESULT CALLBACK MainWindowCallbackProcedure(HWND Window, UINT Message,
                                              WPARAM WParam, LPARAM LParam) {
   LRESULT result = 0;

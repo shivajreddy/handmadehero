@@ -9,7 +9,7 @@ pushd ..\build
 
 :: Compile the code
 echo Compiling...
-cl -Zi ..\code\win32_handmade.cpp user32.lib
+cl -Zi ..\code\win32_handmade.cpp user32.lib gdi32.lib
 
 :: Check if compilation succeeded before running
 if exist win32_handmade.exe (
