@@ -12,16 +12,18 @@ $Creator: smpl
 #include <wingdi.h>
 #include <winuser.h>
 
+#include <cstring>
+
 #define MAX_LOADSTRING 100
 
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES
 //-------------------------------------------------------------------
 HINSTANCE global_hInstance;
-CHAR szTitle[MAX_LOADSTRING];       // The title bar text
-CHAR szWindowClass[MAX_LOADSTRING]; // The main window class name
-// WCHAR szTitle[MAX_LOADSTRING];  // The title bar text
-//  WCHAR szWindowClass[MAX_LOADSTRING];  // The main window class name
+// CHAR szTitle[MAX_LOADSTRING];       // The title bar text
+// CHAR szWindowClass[MAX_LOADSTRING]; // The main window class name
+char win_title[100];
+char win_class[100];
 
 //-------------------------------------------------------------------
 // FORWARD DECLARATIONS
@@ -36,20 +38,24 @@ LRESULT CALLBACK MainWindowCallbackProcedure(HWND, UINT, WPARAM, LPARAM);
 int APIENTRY wWinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PrevInstance,
                       _In_ LPWSTR CommandLine, _In_ int ShowCommand) {
   // Initialize Global Strings
-  LoadString(Instance, 103, szWindowClass, MAX_LOADSTRING);
-  LoadString(Instance, 109, szWindowClass, MAX_LOADSTRING);
+  // LoadString(Instance, 103, szTitle, MAX_LOADSTRING);
+  // LoadString(Instance, 109, szWindowClass, MAX_LOADSTRING);
+  strcpy_s(win_title, "HandMadeHero");
+  strcpy_s(win_class, "HandMadeHero");
 
+  // 1. Register the Window Class
   RegisterHandmadeHeroWindowClass(Instance);
 
-  // Perform Application Initialization
-  if (!InitializeWindowInstance(Instance, ShowCommand))
+  // 2. Create the main Window
+  if (!InitializeWindowInstance(Instance, ShowCommand)) {
     return FALSE;
+  }
 
   // Main message loop:
   MSG Message;
   HACCEL hAccelTable = LoadAccelerators(Instance, MAKEINTRESOURCE(109));
   OutputDebugStringA("hello once\n");
-  while (GetMessage(&Message, nullptr, 0, 0)) {
+  while (GetMessage(&Message, 0, 0, 0)) {
     if (!TranslateAccelerator(Message.hwnd, hAccelTable, &Message)) {
       OutputDebugStringA("hello twice\n");
       TranslateMessage(&Message);
@@ -58,21 +64,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PrevInstance,
   }
 
   return 0;
-}
-
-ATOM RegisterHandmadeHeroWindowClass(HINSTANCE hInst) {
-  // Window class for the main window
-  // WNDCLASSEXW WindowClass = {0};  // for WNDCLASSEXW
-  WNDCLASS WindowClass = {0};
-  WindowClass.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-  WindowClass.lpfnWndProc = MainWindowCallbackProcedure;
-  WindowClass.hInstance = hInst;
-  // WindowClass.lpszClassName = L"HandmadeHeroWindowClass";  // for WNDCLASSEXW
-  WindowClass.lpszClassName = szWindowClass;
-  // WindowClass.lpszClassName = "HandmadeHeroWindowClass";
-
-  // return RegisterClassExW(&WindowClass);  // for WNDCLASSEXW
-  return RegisterClass(&WindowClass);
 }
 
 //----------------------------------------------------------------------
@@ -85,14 +76,31 @@ ATOM RegisterHandmadeHeroWindowClass(HINSTANCE hInst) {
 BOOL InitializeWindowInstance(HINSTANCE Instance, int ShowCommand) {
   global_hInstance = Instance; // store in global variable
 
-  HWND WindowHandle = CreateWindowExA(
-      0, "asdfjk", "asldfjk", WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT,
+  // Create a main window, and get the handle to this window
+  // HWND WindowHandle = CreateWindowEx(
+  //    0, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+  //    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
+  //    Instance, 0);
+  HWND WindowHandle = CreateWindowEx(
+      0, win_class, win_title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT,
       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, Instance, 0);
-  // HWND WindowHandle = CreateWindow( "askdfja", "asldfjk", WS_OVERLAPPEDWINDOW
+
+  /*
+  HWND WindowHandle = CreateWindowExA(
+      0, "asdfjk", "asldfjk", WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+  CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
+  Instance, 0);
+  // HWND WindowHandle = CreateWindow( "askdfja", "asldfjk",
+  WS_OVERLAPPEDWINDOW
   // | WS_VISIBLE, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr,
   // Instance, nullptr);
+  */
 
   if (!WindowHandle) {
+    DWORD error = GetLastError();
+    char errorMsg[256];
+    wsprintf(errorMsg, "CreateWindowEx failed with error: %lu\n", error);
+    OutputDebugStringA(errorMsg);
     return FALSE;
   }
 
@@ -100,6 +108,21 @@ BOOL InitializeWindowInstance(HINSTANCE Instance, int ShowCommand) {
   UpdateWindow(WindowHandle);
 
   return TRUE;
+}
+
+ATOM RegisterHandmadeHeroWindowClass(HINSTANCE hInst) {
+  // Window class for the main window
+  // WNDCLASSEXW WindowClass = {0};  // for WNDCLASSEXW
+  WNDCLASS WindowClass = {0};
+  WindowClass.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+  WindowClass.lpfnWndProc = MainWindowCallbackProcedure;
+  WindowClass.hInstance = hInst;
+  // WindowClass.lpszClassName = L"HandmadeHeroWindowClass";  // for WNDCLASSEXW
+  WindowClass.lpszClassName = win_class;
+  // WindowClass.lpszClassName = "HandmadeHeroWindowClass";
+
+  // return RegisterClassExW(&WindowClass);  // for WNDCLASSEXW
+  return RegisterClass(&WindowClass);
 }
 
 LRESULT CALLBACK MainWindowCallbackProcedure(HWND Window, UINT Message,
@@ -139,10 +162,10 @@ LRESULT CALLBACK MainWindowCallbackProcedure(HWND Window, UINT Message,
 
     EndPaint(Window, &Paint);
   } break;
-  default:
+  default: {
     // Other unhandled Messages will be passed to WindowsOS to handle
     result = DefWindowProc(Window, Message, WParam, LParam);
-    break;
+  } break;
   };
 
   return result;
