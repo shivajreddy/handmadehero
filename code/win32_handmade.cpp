@@ -1,25 +1,24 @@
-/* APP ENTRY POINT
-=====================================================================
-$File : $
-$Date: $
-$Revision: $
-$Creator: smpl
-=====================================================================
-*/
-
+#include <corecrt_wstdlib.h>
 #include <float.h>
 #include <windows.h>
 #include <wingdi.h>
 #include <winuser.h>
 
+#include <cstdlib>
+
+// Defining more meaningful aliases for 'static'
+#define LOCAL_PERSIST static
+#define INTERNAL_FN static
+#define GLOBAL_VAR static
+
 //-------------------------------------------------------------------
 // GLOBAL VARIABLES
 //-------------------------------------------------------------------
 HINSTANCE global_hInstance;
-// CHAR szTitle[MAX_LOADSTRING];       // The title bar text
-// CHAR szWindowClass[MAX_LOADSTRING]; // The main window class name
 char win_title[100];
 char win_class[100];
+
+GLOBAL_VAR bool IsRunning = false;
 
 //-------------------------------------------------------------------
 // FORWARD DECLARATIONS
@@ -46,63 +45,39 @@ int APIENTRY wWinMain(_In_ HINSTANCE Instance, _In_opt_ HINSTANCE PrevInstance,
     return FALSE;
   }
 
-  // 3. Main message loop:
+  IsRunning = true;
+
+  // 3. Main message loop
+  // (our WindowProc fn will handle these disptched messages)
   MSG Message;
   HACCEL hAccelTable = LoadAccelerators(Instance, MAKEINTRESOURCE(109));
   OutputDebugStringA("hello once\n");
-  while (GetMessage(&Message, 0, 0, 0)) {
-    if (!TranslateAccelerator(Message.hwnd, hAccelTable, &Message)) {
-      OutputDebugStringA("hello twice\n");
-      TranslateMessage(&Message);
+  while (IsRunning) {
+    BOOL MessageResult = GetMessage(&Message, 0, 0, 0);
+    if (MessageResult > 0) {
+      TranslateMessage(&Message);  // basically converts messages into proper
+                                   // keyboard messages
       DispatchMessage(&Message);
+    } else {
+      break;
     }
   }
 
-  return 0;
+  return EXIT_SUCCESS;
 }
 
-//----------------------------------------------------------------------
-//   2.1:
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//   PURPOSE: Saves instance handle and creates main window
-//   COMMENTS:
-//        - In this fn, we save the instance handle in a global variable
-//        - create and display the main program window.
-//----------------------------------------------------------------------
+// 2.1: Saves instance handle and creates main window
 BOOL InitializeWindowInstance(HINSTANCE Instance, int ShowCommand) {
-  global_hInstance = Instance; // store in global variable
+  global_hInstance = Instance;  // store in global variable
 
   // Create a main window, and get the handle to this window
-  // HWND WindowHandle = CreateWindowEx(
-  //    0, szWindowClass, szTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-  //    CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
-  //    Instance, 0);
   HWND WindowHandle = CreateWindowEx(
       0, win_class, win_title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT,
       CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, Instance, 0);
 
-  /*
-  HWND WindowHandle = CreateWindowExA(
-      0, "asdfjk", "asldfjk", WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-  CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
-  Instance, 0);
-  // HWND WindowHandle = CreateWindow( "askdfja", "asldfjk",
-  WS_OVERLAPPEDWINDOW
-  // | WS_VISIBLE, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr,
-  // Instance, nullptr);
-  */
-
-  if (!WindowHandle) {
-    DWORD error = GetLastError();
-    char errorMsg[256];
-    wsprintf(errorMsg, "CreateWindowEx failed with error: %lu\n", error);
-    OutputDebugStringA(errorMsg);
-    return FALSE;
-  }
-
-  ////  added new, but we using WS_VISIBLE so it should be fine
-  // ShowWindow(WindowHandle, ShowCommand);
-  //  UpdateWindow(WindowHandle);
+  // FAILED TO CREATE THE MAIN WINDOW
+  // will fail if window class name is not same as Instances classname
+  if (!WindowHandle) return FALSE;
 
   return TRUE;
 }
@@ -123,49 +98,71 @@ ATOM RegisterHandmadeHeroWindowClass(HINSTANCE hInst) {
   return RegisterClass(&WindowClass);
 }
 
-// 1.2
+void do_paint(HWND *);
+
+void ResizeDBISection(int width, int height) {}
+
+// 1.2 (requires gdi32.lib at linking)
 LRESULT CALLBACK MainWindowCallbackProcedure(HWND Window, UINT Message,
                                              WPARAM WParam, LPARAM LParam) {
   LRESULT result = 0;
   // Handle all the messages that Windows Sends to the window
   switch (Message) {
-  case WM_SIZE: {
-    OutputDebugStringA("WM_SIZE");
-  } break;
-  case WM_DESTROY: {
-    OutputDebugStringA("WM_DESTROY");
-  } break;
-  case WM_CLOSE: {
-    OutputDebugStringA("WM_CLOSE");
-    DestroyWindow(Window);
-    exit(0);
-  } break;
-  case WM_ACTIVATEAPP: {
-    OutputDebugStringA("WM_ACTIVATEAPP");
-  } break;
-  case WM_PAINT: {
-    PAINTSTRUCT Paint;
-    HDC DeviceContext = BeginPaint(Window, &Paint);
-    int X = Paint.rcPaint.left;
-    int Y = Paint.rcPaint.top;
-    LONG Width = Paint.rcPaint.right - Paint.rcPaint.left;
-    LONG Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
+    case WM_SIZE: {
+      // Get the new size
+      RECT ClientRect;
+      GetClientRect(Window, &ClientRect);
+      int width = ClientRect.right - ClientRect.left;
+      int height = ClientRect.top - ClientRect.bottom;
 
-    // PatBlt(DeviceContext, X, Y, Width, Height, WHITENESS);
-
-    HBRUSH hPurpleBrush = CreateSolidBrush(0x00800080L); // L for DWORD
-    HGDIOBJ holdBrush = SelectObject(DeviceContext, hPurpleBrush);
-    PatBlt(DeviceContext, X, Y, Width, Height, PATCOPY);
-    SelectObject(DeviceContext, holdBrush); // restore old brush
-    DeleteObject(hPurpleBrush);             // clean up purple brush
-
-    EndPaint(Window, &Paint);
-  } break;
-  default: {
-    // Other unhandled Messages will be passed to WindowsOS to handle
-    result = DefWindowProc(Window, Message, WParam, LParam);
-  } break;
+      ResizeDBISection(width, height);
+      OutputDebugStringA("WM_SIZE");
+    } break;
+    case WM_DESTROY: {    // this is force close
+      IsRunning = false;  // TODO: Handle this with a message to the user?
+      // OutputDebugStringA("WM_DESTROY");
+    } break;
+    case WM_CLOSE: {
+      IsRunning = false;  // TODO: Handle this as an error, recreate the window
+      // OutputDebugStringA("WM_CLOSE");
+      //  DestroyWindow(Window);
+      //  exit(0);
+    } break;
+    case WM_ACTIVATEAPP: {
+      OutputDebugStringA("WM_ACTIVATEAPP");
+    } break;
+    case WM_PAINT: {
+      do_paint(&Window);
+    } break;
+    default: {
+      // Other unhandled Messages will be passed to WindowsOS to handle
+      result = DefWindowProc(Window, Message, WParam, LParam);
+    } break;
   };
 
   return result;
 };
+
+void do_paint(HWND *Wind) {
+  HWND Window = *Wind;
+  PAINTSTRUCT Paint;
+  HDC DeviceContext = BeginPaint(Window, &Paint);
+  int X = Paint.rcPaint.left;
+  int Y = Paint.rcPaint.top;
+  LONG Width = Paint.rcPaint.right - Paint.rcPaint.left;
+  LONG Height = Paint.rcPaint.bottom - Paint.rcPaint.top;
+
+  static DWORD Operation = WHITENESS;
+  PatBlt(DeviceContext, X, Y, Width, Height, Operation);
+  Operation = Operation == WHITENESS ? BLACKNESS : WHITENESS;
+
+  /*
+  HBRUSH hPurpleBrush = CreateSolidBrush(0x00800080L);  // L for DWORD
+  HGDIOBJ holdBrush = SelectObject(DeviceContext, hPurpleBrush);
+  PatBlt(DeviceContext, X, Y, Width, Height, PATCOPY);
+  SelectObject(DeviceContext, holdBrush);  // restore old brush
+  DeleteObject(hPurpleBrush);              // clean up purple brush
+  */
+
+  EndPaint(Window, &Paint);
+}
